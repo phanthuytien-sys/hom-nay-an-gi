@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hôm Nay Ăn Gì? 🍜 — Để Vợ Ô Xêhun quyết định bữa trưa giúp bạn</title>
+<meta name="description" content="Hết đau đầu vì 'ăn gì trưa nay?'. Chỉ cần vài lựa chọn, Vợ Ô Xêhun sẽ quyết định món ăn thay bạn." />
+<style>
+  :root{
+    --bg:#fff7ed; --bg2:#fffbeb; --ink:#1f2937; --muted:#6b7280;
+    --primary:#f97316; --primary-dark:#ea580c; --accent:#ef4444;
+    --green:#16a34a; --card:#ffffff; --border:#fde7cf; --radius:20px;
+    --shadow:0 12px 35px rgba(249,115,22,.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.6; overflow-x:hidden;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .hidden{display:none !important}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;text-align:center;padding:70px 0 60px;overflow:hidden;
+    background:radial-gradient(1200px 500px at 50% -10%, #ffedd5, var(--bg));}
+  .hero .emoji-float{position:absolute;font-size:34px;opacity:.7;animation:floaty 7s ease-in-out infinite;user-select:none}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-26px) rotate(6deg)}}
+  .hero h1{font-size:clamp(38px,8vw,64px);line-height:1.05;letter-spacing:-1.5px;margin-bottom:18px;position:relative}
+  .hero h1 .pho{display:inline-block;animation:floaty 4s ease-in-out infinite}
+  .hero .lead{font-size:clamp(17px,3.5vw,21px);color:var(--muted);max-width:560px;margin:0 auto 14px;position:relative}
+  .hero .lead b{color:var(--primary-dark)}
+  .steam{height:40px;position:relative;width:60px;margin:0 auto 6px}
+  .steam span{position:absolute;bottom:0;width:8px;height:30px;background:rgba(249,115,22,.25);border-radius:8px;
+    filter:blur(4px);animation:steam 2.6s ease-in-out infinite}
+  .steam span:nth-child(1){left:14px;animation-delay:0s}
+  .steam span:nth-child(2){left:28px;animation-delay:.5s}
+  .steam span:nth-child(3){left:42px;animation-delay:1s}
+  @keyframes steam{0%{opacity:0;transform:translateY(0) scaleX(1)}40%{opacity:1}100%{opacity:0;transform:translateY(-34px) scaleX(2.4)}}
+
+  .btn{display:inline-block;padding:16px 38px;border-radius:999px;font-weight:800;font-size:18px;
+    background:var(--primary);color:#fff;box-shadow:var(--shadow);transition:transform .15s,background .15s}
+  .btn:hover{background:var(--primary-dark);transform:translateY(-3px)}
+  .btn:active{transform:translateY(0)}
+  .btn-lg{padding:18px 50px;font-size:20px;margin-top:26px}
+  .btn-ghost{background:#fff;color:var(--primary-dark);border:2px solid var(--border)}
+  .btn-ghost:hover{background:#fff;border-color:var(--primary)}
+  .btn-sm{padding:10px 22px;font-size:15px}
+
+  /* ===== WIZARD ===== */
+  .stage{padding:50px 0 70px}
+  .progress{display:flex;gap:6px;justify-content:center;margin-bottom:30px}
+  .progress i{height:6px;width:34px;border-radius:6px;background:var(--border);transition:background .3s}
+  .progress i.on{background:var(--primary)}
+  .step{animation:fadeUp .4s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .step h2{text-align:center;font-size:clamp(26px,5vw,34px);margin-bottom:6px;letter-spacing:-.5px}
+  .step .sub{text-align:center;color:var(--muted);margin-bottom:30px}
+  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .chip{padding:13px 22px;border-radius:14px;background:#fff;border:2px solid var(--border);font-weight:600;font-size:16px;
+    transition:all .15s}
+  .chip:hover{border-color:var(--primary)}
+  .chip.sel{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:14px}
+  .food-card{background:#fff;border:2px solid var(--border);border-radius:16px;padding:20px 10px;text-align:center;
+    font-weight:700;transition:all .15s}
+  .food-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:var(--shadow)}
+  .food-card.sel{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .food-card .e{font-size:34px;display:block;margin-bottom:8px}
+
+  .budget{max-width:520px;margin:0 auto;text-align:center}
+  .budget .val{font-size:40px;font-weight:900;color:var(--primary-dark);margin-bottom:14px}
+  input[type=range]{width:100%;accent-color:var(--primary);height:6px}
+  .or{text-align:center;color:#cbb8a3;margin:22px 0;font-weight:600;letter-spacing:1px}
+
+  .loc-stack{max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+  .loc-stack .select-wrap{margin:0;width:100%}
+  .loc-select:disabled{opacity:.5;cursor:not-allowed;background:#faf6f0}
+  .select-wrap{max-width:380px;margin:0 auto;position:relative}
+  .select-wrap::after{content:"▾";position:absolute;right:20px;top:50%;transform:translateY(-50%);
+    color:var(--primary);font-size:18px;pointer-events:none}
+  .loc-select{width:100%;padding:16px 44px 16px 20px;border-radius:14px;background:#fff;
+    border:2px solid var(--border);font-size:17px;font-weight:600;color:var(--ink);
+    appearance:none;-webkit-appearance:none;cursor:pointer;transition:border-color .15s}
+  .loc-select:hover,.loc-select:focus{border-color:var(--primary);outline:none}
+
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:34px;gap:12px}
+  .nav-row .spacer{flex:1}
+
+  /* ===== LOADING ===== */
+  .loader{text-align:center;padding:60px 0}
+  .bowl{font-size:90px;display:inline-block;animation:shake 1.1s ease-in-out infinite}
+  @keyframes shake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+  .debate{font-size:22px;font-weight:700;margin-top:24px;min-height:34px;transition:opacity .25s}
+  .dots{color:var(--muted);margin-top:8px}
+
+  /* ===== RESULT ===== */
+  .result-card{background:#fff;border-radius:26px;box-shadow:var(--shadow);overflow:hidden;max-width:480px;margin:0 auto;
+    animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+  .result-hero{background:linear-gradient(135deg,#fb923c,#ef4444);color:#fff;text-align:center;padding:40px 20px 30px}
+  .result-hero .big-emoji{font-size:80px;line-height:1}
+  .result-hero h3{font-size:32px;margin-top:10px}
+  .result-hero .stars{font-size:18px;margin-top:6px;letter-spacing:2px}
+  .result-meta{display:flex;justify-content:center;gap:22px;padding:18px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+  .result-meta div{text-align:center}
+  .result-meta .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .result-meta .data{font-size:18px;font-weight:800}
+  .open-now{color:var(--green)}
+  .result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px}
+  .result-actions .btn{font-size:15px;padding:13px;width:100%;text-align:center}
+  .result-actions .full{grid-column:1/-1}
+  .reason{background:var(--bg2);border:1px dashed var(--primary);border-radius:16px;padding:18px 22px;max-width:480px;
+    margin:22px auto 0}
+  .reason h4{margin-bottom:8px;color:var(--primary-dark)}
+  .reason li{list-style:none;padding:3px 0}
+  .reason li::before{content:"✔ ";color:var(--green);font-weight:800}
+  .reason .concl{margin-top:10px;font-weight:700}
+  .ai-say{max-width:480px;margin:18px auto 0;background:#1f2937;color:#fde7cf;border-radius:16px;padding:16px 20px;
+    font-size:16px;position:relative}
+  .ai-say::before{content:"👰";position:absolute;left:-6px;top:-14px;font-size:26px}
+  .easter{text-align:center;font-size:18px;color:var(--accent);font-weight:700;margin-top:16px;min-height:26px}
+
+  /* ===== FEATURE SECTIONS ===== */
+  section.feature{padding:60px 0;border-top:1px solid var(--border)}
+  section.feature h2{text-align:center;font-size:clamp(26px,5vw,34px);margin-bottom:8px;letter-spacing:-.5px}
+  section.feature .sub{text-align:center;color:var(--muted);margin-bottom:30px}
+
+  /* Wheel */
+  .wheel-wrap{text-align:center}
+  .wheel-box{position:relative;width:260px;height:260px;margin:0 auto 20px}
+  .wheel{width:100%;height:100%;border-radius:50%;transition:transform 4s cubic-bezier(.17,.67,.2,1);
+    box-shadow:var(--shadow)}
+  .wheel-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:34px;z-index:2}
+  .wheel-result{font-size:24px;font-weight:800;min-height:34px;margin-top:6px}
+
+  /* Tinder */
+  .tinder{position:relative;height:360px;max-width:320px;margin:0 auto 20px}
+  .tcard{position:absolute;inset:0;background:#fff;border-radius:24px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);
+    transition:transform .35s ease,opacity .35s ease}
+  .tcard .e{font-size:110px}
+  .tcard .n{font-size:26px;font-weight:800;margin-top:10px}
+  .tcard .stamp{position:absolute;top:24px;font-size:30px;font-weight:900;padding:6px 16px;border:4px solid;border-radius:12px;
+    opacity:0;transition:opacity .15s}
+  .tcard .like{left:20px;color:var(--green);border-color:var(--green);transform:rotate(-18deg)}
+  .tcard .nope{right:20px;color:var(--accent);border-color:var(--accent);transform:rotate(18deg)}
+  .tinder-btns{display:flex;gap:22px;justify-content:center;margin-bottom:14px}
+  .round{width:64px;height:64px;border-radius:50%;font-size:28px;background:#fff;box-shadow:var(--shadow);
+    border:2px solid var(--border);transition:transform .15s}
+  .round:hover{transform:scale(1.1)}
+  .tinder-result{text-align:center;font-size:18px;font-weight:700;min-height:30px}
+
+  /* Mood */
+  .mood-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:18px}
+  .mood-grid .chip .e{font-size:22px;margin-right:6px}
+  .mood-out{text-align:center;max-width:460px;margin:0 auto}
+  .mood-out .pill{display:inline-block;background:#fff;border:2px solid var(--border);border-radius:14px;
+    padding:10px 18px;margin:6px;font-weight:700}
+
+  footer{background:#1f2937;color:#9ca3af;text-align:center;padding:40px 18px;font-size:14px}
+  footer b{color:#fff}
+  .credit{margin-top:8px;opacity:.7}
+
+  @media(max-width:560px){
+    .result-actions{grid-template-columns:1fr}
+    .hero{padding:50px 0 40px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <span class="emoji-float" style="left:6%;top:18%">🍜</span>
+  <span class="emoji-float" style="left:88%;top:14%;animation-delay:1s">🍕</span>
+  <span class="emoji-float" style="left:12%;top:70%;animation-delay:2s">🍣</span>
+  <span class="emoji-float" style="left:82%;top:66%;animation-delay:1.5s">🍔</span>
+  <span class="emoji-float" style="left:46%;top:8%;animation-delay:.6s">🥢</span>
+  <div class="wrap">
+    <div class="steam"><span></span><span></span><span></span></div>
+    <h1>🥢 Hôm Nay <span class="pho">Ăn</span> Gì?</h1>
+    <p class="lead"><b>80%</b> thời gian nghỉ trưa là để nghĩ xem ăn gì.</p>
+    <p class="lead">Để <b>Vợ Ô Xêhun</b> quyết định giúp bạn. 👰</p>
+    <button class="btn btn-lg" onclick="startWizard()">Bắt đầu 🚀</button>
+  </div>
+</header>
+
+<!-- ================= WIZARD ================= -->
+<main class="stage wrap" id="wizard" style="display:none">
+  <div class="progress" id="progress"></div>
+  <div id="stepArea"></div>
+</main>
+
+<!-- ================= BONUS FEATURES ================= -->
+<section class="feature" id="surprise">
+  <div class="wrap" style="text-align:center">
+    <h2>🎲 Lười chọn?</h2>
+    <p class="sub">Nhấn 1 nút, để vợ chốt đại cho nhanh!</p>
+    <button class="btn" onclick="surpriseMe()">🎲 Ăn gì cũng được</button>
+    <div id="surpriseOut" class="mood-out" style="margin-top:22px"></div>
+  </div>
+</section>
+
+<section class="feature" id="moodSec">
+  <div class="wrap">
+    <h2>😌 Chọn tâm trạng, không chọn món</h2>
+    <p class="sub">Hôm nay bạn thấy thế nào? Vợ Ô Xêhun đọc vị cái bụng theo mood.</p>
+    <div class="mood-grid" id="moodGrid"></div>
+    <div class="mood-out" id="moodOut"></div>
+  </div>
+</section>
+
+<section class="feature" id="wheelSec">
+  <div class="wrap wheel-wrap">
+    <h2>🎡 Vòng quay may mắn</h2>
+    <p class="sub">Số phận bữa trưa nằm ở đây.</p>
+    <div class="wheel-box">
+      <div class="wheel-pointer">🔻</div>
+      <svg class="wheel" id="wheel" viewBox="0 0 200 200"></svg>
+    </div>
+    <button class="btn" onclick="spinWheel()" id="spinBtn">SPIN 🌀</button>
+    <div class="wheel-result" id="wheelResult"></div>
+  </div>
+</section>
+
+<section class="feature" id="tinderSec">
+  <div class="wrap">
+    <h2>🔥 Tinder Food</h2>
+    <p class="sub">Quẹt phải món thích, quẹt trái món chán. Vợ Ô Xêhun học gu của bạn.</p>
+    <div class="tinder" id="tinder"></div>
+    <div class="tinder-btns">
+      <button class="round" onclick="swipe(false)">❌</button>
+      <button class="round" onclick="swipe(true)">❤️</button>
+    </div>
+    <div class="tinder-result" id="tinderResult"></div>
+  </div>
+</section>
+
+<footer>
+  <div><b>🥢 Hôm Nay Ăn Gì?</b> — Hết đau đầu vì "ăn gì trưa nay?"</div>
+  <div class="credit">Bản demo tương tác · Dữ liệu món ăn là mẫu · © 2026</div>
+</footer>
+
+<script src="locations.js"></script>
+<script>
+/* =========================================================
+   DỮ LIỆU MÓN ĂN (mẫu — có thể thay bằng API thật sau)
+   type khớp với card; moods, who để AI gợi ý
+========================================================= */
+const DISHES = [
+  {name:"Bún bò Huế", e:"🍜", type:"nuoc", price:38000, rating:5, dist:750, open:true, moods:["lanh","met","deadline"], who:["minh","banbe","dongnghiep"], q:"Bún bò Huế gần đây"},
+  {name:"Phở Thìn", e:"🍜", type:"nuoc", price:60000, rating:5, dist:420, open:true, moods:["lanh","buonngu","met"], who:["minh","dongnghiep"], q:"Phở Thìn"},
+  {name:"Bún chả Hà Nội", e:"🍛", type:"bun", price:45000, rating:4, dist:690, open:true, moods:["vui","nong"], who:["banbe","nguoiyeu"], q:"Bún chả gần đây"},
+  {name:"Cơm tấm Cali", e:"🍚", type:"com", price:42000, rating:4, dist:800, open:true, moods:["deadline","met"], who:["minh","dongnghiep"], q:"Cơm tấm gần đây"},
+  {name:"Cơm gà Hải Nam", e:"🍚", type:"com", price:55000, rating:4, dist:1200, open:true, moods:["deadline"], who:["dongnghiep","banbe"], q:"Cơm gà Hải Nam"},
+  {name:"Pizza 4P's", e:"🍕", type:"pizza", price:120000, rating:5, dist:1800, open:true, moods:["vui"], who:["nguoiyeu","banbe"], q:"Pizza 4Ps"},
+  {name:"Burger Phố", e:"🍔", type:"fastfood", price:65000, rating:4, dist:950, open:true, moods:["vui","deadline"], who:["banbe","minh"], q:"Burger gần đây"},
+  {name:"Salad Healthy Bowl", e:"🥗", type:"healthy", price:70000, rating:4, dist:600, open:true, moods:["nong"], who:["minh","nguoiyeu"], q:"Salad healthy gần đây"},
+  {name:"Sushi Tei", e:"🍣", type:"nhat", price:110000, rating:5, dist:1500, open:true, moods:["vui","nong"], who:["nguoiyeu","banbe"], q:"Sushi gần đây"},
+  {name:"Mì cay Hàn Quốc", e:"🥘", type:"han", price:75000, rating:4, dist:1100, open:true, moods:["lanh","deadline"], who:["banbe","nguoiyeu"], q:"Mì cay Hàn Quốc"},
+  {name:"Buffet nướng BBQ", e:"🥩", type:"nuong", price:199000, rating:5, dist:2200, open:true, moods:["vui"], who:["banbe","dongnghiep"], q:"Buffet nướng gần đây"},
+  {name:"Bún riêu cua", e:"🍲", type:"nuoc", price:35000, rating:4, dist:540, open:true, moods:["lanh","met"], who:["minh"], q:"Bún riêu gần đây"},
+  {name:"Dimsum quán Tàu", e:"🥟", type:"trung", price:90000, rating:4, dist:1700, open:true, moods:["vui","nong"], who:["nguoiyeu","banbe"], q:"Dimsum gần đây"},
+  {name:"Cơm gà xối mỡ", e:"🍗", type:"com", price:40000, rating:4, dist:880, open:true, moods:["deadline","met"], who:["minh","dongnghiep"], q:"Cơm gà xối mỡ"},
+  {name:"Bún chả cá", e:"🐟", type:"bun", price:38000, rating:4, dist:920, open:true, moods:["nong","met"], who:["minh"], q:"Bún chả cá gần đây"},
+  {name:"Trà chanh giải nhiệt", e:"🍹", type:"cafe", price:25000, rating:4, dist:300, open:true, moods:["nong","vui"], who:["banbe"], q:"Trà chanh gần đây"},
+  {name:"Cà phê sữa đá", e:"☕", type:"cafe", price:30000, rating:5, dist:250, open:true, moods:["buonngu","deadline"], who:["minh","dongnghiep"], q:"Cà phê gần đây"},
+  {name:"Gỏi cuốn tôm thịt", e:"🥬", type:"healthy", price:35000, rating:4, dist:480, open:true, moods:["nong"], who:["minh","nguoiyeu"], q:"Gỏi cuốn gần đây"},
+];
+
+const TYPE_LABEL = {nuoc:"Nước",com:"Cơm",fastfood:"Fast Food",pizza:"Pizza",healthy:"Healthy",
+  nhat:"Nhật",han:"Hàn",nuong:"Nướng",bun:"Bún",trung:"Đồ Trung",cafe:"Cafe"};
+
+/* state người dùng */
+const S = {province:null, district:null, ward:null, location:null, budget:80000, type:null, who:null, distance:2000};
+let stepIdx = 0;
+let lastResult = null;
+let changeCount = 0;
+
+/* =========================================================
+   WIZARD — định nghĩa từng bước
+========================================================= */
+const STEPS = [
+  { // 0
+    title:"Bạn đang ở đâu? 📍",
+    sub:"Chọn lần lượt Tỉnh/Thành → Quận/Huyện → Phường/Xã.",
+    render(){
+      const provs=Object.keys(VN_LOCATIONS);
+      const opt=(val,sel,ph)=>`<option value="" ${!sel?'selected':''} disabled>${ph}</option>`;
+      const list=(arr,cur)=>arr.map(o=>`<option value="${o}" ${cur===o?'selected':''}>${o}</option>`).join("");
+      return `<div class="loc-stack">
+          <div class="select-wrap">
+            <select class="loc-select" id="selProvince" onchange="onProvince(this.value)">
+              ${opt(0,S.province,'— Tỉnh / Thành phố —')}${list(provs,S.province)}
+            </select>
+          </div>
+          <div class="select-wrap">
+            <select class="loc-select" id="selDistrict" onchange="onDistrict(this.value)" ${S.province?'':'disabled'}>
+              ${opt(0,S.district,'— Quận / Huyện —')}${S.province?list(Object.keys(VN_LOCATIONS[S.province]),S.district):''}
+            </select>
+          </div>
+          <div class="select-wrap">
+            <select class="loc-select" id="selWard" onchange="onWard(this.value)" ${S.district?'':'disabled'}>
+              ${opt(0,S.ward,'— Phường / Xã —')}${(S.province&&S.district)?list(VN_LOCATIONS[S.province][S.district],S.ward):''}
+            </select>
+          </div>
+        </div>
+        <div class="or">— hoặc —</div>
+        <div style="text-align:center"><button class="btn btn-ghost btn-sm" onclick="useGeo()">📡 Cho phép lấy vị trí</button></div>`;
+    }
+  },
+  { // 1
+    title:"Ngân sách 💰",
+    sub:"Kéo thanh trượt hoặc chọn nhanh.",
+    render(){
+      return `<div class="budget">
+        <div class="val" id="budgetVal">${fmt(S.budget)}đ</div>
+        <input type="range" min="20000" max="200000" step="5000" value="${S.budget}"
+          oninput="S.budget=+this.value;document.getElementById('budgetVal').textContent=fmt(S.budget)+'đ'">
+        <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:4px">
+          <span>20k</span><span>200k</span></div>
+      </div>
+      <div class="or">— chọn nhanh —</div>
+      <div class="chips">
+        ${[["20-40k",40000],["40-70k",70000],["70-150k",150000],["Không giới hạn",200000]]
+          .map(([l,v])=>`<button class="chip" onclick="setBudget(${v},this)">${l}</button>`).join("")}
+      </div>`;
+    }
+  },
+  { // 2
+    title:"Hôm nay muốn ăn gì? 🤤",
+    sub:"Chọn 1 loại — hoặc để chúng tôi tự quyết.",
+    render(){
+      const items=[["nuoc","🍜","Nước"],["com","🍚","Cơm"],["fastfood","🍔","Fast Food"],
+        ["pizza","🍕","Pizza"],["healthy","🥗","Healthy"],["nhat","🍣","Nhật"],
+        ["han","🥘","Hàn"],["nuong","🥩","Nướng"],["bun","🍛","Bún"],
+        ["trung","🥟","Đồ Trung"],["cafe","☕","Cafe"],["any","🎲","Ăn gì cũng được"]];
+      return `<div class="cards">${items.map(([t,e,l])=>
+        `<button class="food-card${S.type===t?' sel':''}" onclick="pickType('${t}',this)">
+          <span class="e">${e}</span>${l}</button>`).join("")}</div>`;
+    }
+  },
+  { // 3
+    title:"Đi với ai? 👥",
+    sub:"Để gợi ý không gian quán phù hợp.",
+    render(){
+      const opts=[["minh","👤 Một mình"],["dongnghiep","👨‍👩‍👧 Đồng nghiệp"],
+        ["nguoiyeu","❤️ Người yêu"],["banbe","👥 Bạn bè"]];
+      return `<div class="chips">${opts.map(([v,l])=>
+        `<button class="chip${S.who===v?' sel':''}" onclick="pickWho('${v}',this)">${l}</button>`).join("")}</div>`;
+    }
+  },
+  { // 4
+    title:"Muốn đi bao xa? 🚶",
+    sub:"Bán kính tìm quán quanh bạn.",
+    render(){
+      const opts=[["500m",500],["1km",1000],["2km",2000],["5km",5000]];
+      return `<div class="chips">${opts.map(([l,v])=>
+        `<button class="chip${S.distance===v?' sel':''}" onclick="pickDist(${v},this)">${l}</button>`).join("")}</div>`;
+    }
+  }
+];
+
+/* ---------- render helpers ---------- */
+function chipBlock(opts,key){
+  return `<div class="chips">${opts.map(o=>
+    `<button class="chip${S[key]===o?' sel':''}" onclick="pickChip('${key}','${o}',this)">${o}</button>`).join("")}</div>`;
+}
+function fmt(n){return n.toLocaleString("vi-VN");}
+
+function startWizard(){
+  document.getElementById("wizard").style.display="block";
+  stepIdx=0; renderStep();
+  document.getElementById("wizard").scrollIntoView({behavior:"smooth"});
+}
+function renderStep(){
+  const total=STEPS.length;
+  document.getElementById("progress").innerHTML=
+    Array.from({length:total},(_,i)=>`<i class="${i<=stepIdx?'on':''}"></i>`).join("");
+  const st=STEPS[stepIdx];
+  const canNext = stepIdx===2 ? true : true; // luôn cho qua, có giá trị mặc định
+  document.getElementById("stepArea").innerHTML=`
+    <div class="step" key="${stepIdx}">
+      <h2>${st.title}</h2>
+      <p class="sub">${st.sub}</p>
+      ${st.render()}
+      <div class="nav-row">
+        ${stepIdx>0?`<button class="btn btn-ghost btn-sm" onclick="prevStep()">← Quay lại</button>`:'<span></span>'}
+        <span class="spacer"></span>
+        <button class="btn btn-sm" onclick="nextStep()">
+          ${stepIdx===STEPS.length-1?'Tìm món cho tôi 🍽️':'Tiếp →'}</button>
+      </div>
+    </div>`;
+}
+function nextStep(){
+  if(stepIdx<STEPS.length-1){stepIdx++;renderStep();}
+  else runDecision();
+}
+function prevStep(){if(stepIdx>0){stepIdx--;renderStep();}}
+
+/* ---------- selection handlers ---------- */
+function pickChip(key,val,el){S[key]=val;mark(el);}
+function setBudget(v,el){S.budget=v;document.getElementById('budgetVal').textContent=fmt(v)+'đ';mark(el);}
+function pickType(t,el){S.type=t;markCard(el);}
+function pickWho(v,el){S.who=v;mark(el);}
+function pickDist(v,el){S.distance=v;mark(el);}
+function mark(el){[...el.parentNode.children].forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function markCard(el){[...el.parentNode.children].forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+/* ---------- cascade vị trí ---------- */
+function fillSelect(sel,items,placeholder,current){
+  sel.innerHTML=`<option value="" disabled ${current?'':'selected'}>${placeholder}</option>`+
+    items.map(o=>`<option value="${o}" ${current===o?'selected':''}>${o}</option>`).join("");
+}
+function syncLocation(){
+  S.location=[S.ward,S.district,S.province].filter(Boolean).join(", ")||null;
+}
+function onProvince(v){
+  S.province=v; S.district=null; S.ward=null;
+  const dSel=document.getElementById("selDistrict"), wSel=document.getElementById("selWard");
+  fillSelect(dSel,Object.keys(VN_LOCATIONS[v]),"— Quận / Huyện —",null); dSel.disabled=false;
+  fillSelect(wSel,[],"— Phường / Xã —",null); wSel.disabled=true;
+  syncLocation();
+}
+function onDistrict(v){
+  S.district=v; S.ward=null;
+  const wSel=document.getElementById("selWard");
+  fillSelect(wSel,VN_LOCATIONS[S.province][v],"— Phường / Xã —",null); wSel.disabled=false;
+  syncLocation();
+}
+function onWard(v){ S.ward=v; syncLocation(); }
+
+function useGeo(){
+  if(!navigator.geolocation){alert("Trình duyệt không hỗ trợ định vị 😅");return;}
+  navigator.geolocation.getCurrentPosition(
+    ()=>{S.location="Vị trí của bạn";alert("Đã lấy vị trí! 📍");},
+    ()=>alert("Không lấy được vị trí, bạn chọn quận thủ công nhé 🙏"));
+}
+
+/* =========================================================
+   AI QUYẾT ĐỊNH
+========================================================= */
+function pickMatches(){
+  let list = DISHES.filter(d=>
+    d.price<=S.budget+1 &&
+    d.dist<=S.distance &&
+    (!S.type || S.type==="any" || d.type===S.type) &&
+    (!S.who || d.who.includes(S.who))
+  );
+  if(!list.length) list = DISHES.filter(d=> (!S.type||S.type==="any"||d.type===S.type));
+  if(!list.length) list = DISHES.slice();
+  // ưu tiên rating cao, gần
+  return list.sort((a,b)=> b.rating-a.rating || a.dist-b.dist);
+}
+
+function runDecision(){
+  changeCount=0;
+  const area=document.getElementById("stepArea");
+  document.getElementById("progress").innerHTML="";
+  const lines=["🤔 Để em nghĩ xem cho chồng ăn gì...","🍜 Hay là phở nhỉ, lâu rồi anh chưa ăn...",
+    "🍛 Mà thôi, cơm cho chắc bụng...","🍲 Em đang phân vân quá đi à...",
+    "🥢 Để em hỏi cái bụng của anh xíu...","✅ Rồi, em chốt rồi nha chồng!"];
+  area.innerHTML=`<div class="loader">
+      <div class="bowl">🍜</div>
+      <div class="debate" id="debate">${lines[0]}</div>
+      <div class="dots">Vợ Ô Xêhun đang cân não giúp bạn...</div>
+    </div>`;
+  let i=0;
+  const deb=document.getElementById("debate");
+  const t=setInterval(()=>{
+    i++;
+    if(i>=lines.length){clearInterval(t);showResult();return;}
+    deb.style.opacity=0;
+    setTimeout(()=>{deb.textContent=lines[i];deb.style.opacity=1;},220);
+  },650);
+}
+
+function buildResult(matches){
+  lastResult = matches;
+  return matches[0];
+}
+
+let resultPool=[], resultPos=0;
+function showResult(){
+  resultPool = pickMatches();
+  resultPos = 0;
+  paintResult();
+}
+function paintResult(){
+  const d = resultPool[resultPos % resultPool.length];
+  const area=document.getElementById("stepArea");
+  const stars="⭐".repeat(d.rating);
+  area.innerHTML=`
+    <div class="result-card">
+      <div class="result-hero">
+        <div class="big-emoji">${d.e}</div>
+        <h3>${d.name}</h3>
+        <div class="stars">${stars}</div>
+      </div>
+      <div class="result-meta">
+        <div><div class="label">Giá</div><div class="data">${fmt(d.price)}đ</div></div>
+        <div><div class="label">Cách xa</div><div class="data">${d.dist<1000?d.dist+"m":(d.dist/1000)+"km"}</div></div>
+        <div><div class="label">Trạng thái</div><div class="data open-now">● Mở cửa</div></div>
+      </div>
+      <div class="result-actions">
+        <a class="btn" target="_blank" href="https://www.google.com/maps/search/${encodeURIComponent(d.q)}">🧭 Chỉ đường</a>
+        <a class="btn btn-ghost" target="_blank" href="https://www.google.com/search?q=${encodeURIComponent('menu '+d.name)}">📋 Xem menu</a>
+        <button class="btn btn-ghost full" onclick="changeDish()">🔄 Đổi món</button>
+      </div>
+    </div>
+    ${reasonHTML(d)}
+    <div class="ai-say" id="aiSay">${aiPersonality(d)}</div>
+    <div class="easter" id="easter"></div>
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn btn-ghost btn-sm" onclick="restart()">↺ Làm lại từ đầu</button>
+    </div>`;
+}
+function reasonHTML(d){
+  const items=[];
+  if(S.type&&S.type!=="any") items.push(`Muốn ăn <b>${TYPE_LABEL[d.type]||d.type}</b>`);
+  if(S.budget) items.push(`Ngân sách quanh <b>${fmt(S.budget)}đ</b>`);
+  if(S.who) items.push(`Đi <b>${({minh:"một mình",dongnghiep:"với đồng nghiệp",nguoiyeu:"với người yêu",banbe:"với bạn bè"})[S.who]}</b>`);
+  items.push(`Trong bán kính <b>${S.distance<1000?S.distance+"m":(S.distance/1000)+"km"}</b>`);
+  return `<div class="reason">
+    <h4>Vì sao vợ chọn món này cho chồng?</h4>
+    <ul>${items.map(t=>`<li>${t}</li>`).join("")}</ul>
+    <div class="concl">→ Nên <b>${d.name}</b> là hợp ý anh nhất rồi đó! 🎯</div>
+  </div>`;
+}
+function aiPersonality(d){
+  const lines=[
+    `Nghe lời vợ đi, ăn <b>${d.name}</b> là chuẩn bài rồi. Đừng cãi nha chồng! 😘`,
+    `Trời này mà có <b>${d.name}</b> thì còn gì bằng. Em chọn cho rồi đó, đi ăn liền! 🥰`,
+    `Em biết anh đang phân vân... mà thôi <b>${d.name}</b> đi, vợ chưa bao giờ chọn sai. 💅`,
+    `Đừng tiếc tiền, <b>${d.name}</b> có ${fmt(d.price)}đ thôi mà. Ăn cho vợ vui! ❤️`,
+    `Hôm nay vợ thương nên chọn <b>${d.name}</b> cho cưng đó. Ăn ngoan nha! 🥢`
+  ];
+  return lines[Math.floor(Math.random()*lines.length)];
+}
+function changeDish(){
+  changeCount++;
+  resultPos++;
+  paintResult();
+  // Easter egg
+  const egg=document.getElementById("easter");
+  if(changeCount>=3 && changeCount<6) egg.textContent="😒 Anh khó chiều ghê á nha.";
+  else if(changeCount>=6 && changeCount<10) egg.textContent="😤 Đổi nữa là em giận thật đó! Hay nhịn luôn cho biết mặt?";
+  else if(changeCount>=10) egg.textContent=`💢 Lần thứ ${changeCount} rồi đấy chồng ơi! Thôi anh tự chọn đi, em không nói nữa! 🙅‍♀️`;
+}
+function restart(){
+  Object.assign(S,{location:null,budget:80000,type:null,who:null,distance:2000});
+  stepIdx=0; startWizard();
+}
+
+/* =========================================================
+   SURPRISE ME
+========================================================= */
+function surpriseMe(){
+  const d=DISHES[Math.floor(Math.random()*DISHES.length)];
+  document.getElementById("surpriseOut").innerHTML=
+    `<div class="pill" style="font-size:20px">${d.e} <b>${d.name}</b> · ${fmt(d.price)}đ</div>
+     <div style="margin-top:10px"><a class="btn btn-sm" target="_blank"
+       href="https://www.google.com/maps/search/${encodeURIComponent(d.q)}">🧭 Đi ngay</a></div>`;
+}
+
+/* =========================================================
+   MOOD
+========================================================= */
+const MOODS=[["met","😫","Mệt"],["vui","😄","Vui"],["buonngu","😴","Buồn ngủ"],
+  ["deadline","🤯","Deadline"],["lanh","🥶","Trời lạnh"],["nong","🥵","Trời nóng"]];
+const MOOD_TIP={met:"Mệt rồi hả chồng, ăn đồ nóng dễ tiêu cho khỏe nha.",
+  vui:"Vui thế thì ăn món gì quẩy quẩy đi anh!",
+  buonngu:"Buồn ngủ thì làm ly cà phê với món tỉnh táo nè.",
+  deadline:"Deadline gấp hả, ăn nhanh gọn no lâu cho kịp nha cưng.",
+  lanh:"Trời lạnh, để em chọn tô nước nóng hổi cho ấm bụng anh.",
+  nong:"Nóng nực thì ăn đồ mát thanh thôi, đừng hành xác nha chồng."};
+function initMood(){
+  document.getElementById("moodGrid").innerHTML=MOODS.map(([v,e,l])=>
+    `<button class="chip" onclick="pickMood('${v}',this)"><span class="e">${e}</span>${l}</button>`).join("");
+}
+function pickMood(m,el){
+  [...el.parentNode.children].forEach(c=>c.classList.remove('sel'));el.classList.add('sel');
+  const recs=DISHES.filter(d=>d.moods.includes(m)).sort((a,b)=>b.rating-a.rating).slice(0,3);
+  document.getElementById("moodOut").innerHTML=
+    `<p style="margin-bottom:10px;color:var(--muted)"><i>“${MOOD_TIP[m]}”</i></p>`+
+    recs.map(d=>`<span class="pill">${d.e} ${d.name}</span>`).join("");
+}
+
+/* =========================================================
+   WHEEL
+========================================================= */
+const WHEEL_ITEMS=[["🍜","nuoc"],["🍕","pizza"],["🍚","com"],["🍔","fastfood"],["🍣","nhat"],["🥩","nuong"],["🍛","bun"],["🥗","healthy"]];
+const WHEEL_COLORS=["#fb923c","#f97316","#ef4444","#f59e0b","#fbbf24","#fb7185","#f43f5e","#fca5a5"];
+let wheelAngle=0, spinning=false;
+function buildWheel(){
+  const n=WHEEL_ITEMS.length, step=360/n, R=100, cx=100, cy=100;
+  let svg="";
+  for(let i=0;i<n;i++){
+    const a0=(i*step-90)*Math.PI/180, a1=((i+1)*step-90)*Math.PI/180;
+    const x0=cx+R*Math.cos(a0), y0=cy+R*Math.sin(a0);
+    const x1=cx+R*Math.cos(a1), y1=cy+R*Math.sin(a1);
+    svg+=`<path d="M${cx},${cy} L${x0},${y0} A${R},${R} 0 0,1 ${x1},${y1} Z" fill="${WHEEL_COLORS[i]}"/>`;
+    const am=(i*step+step/2-90)*Math.PI/180;
+    const tx=cx+R*0.62*Math.cos(am), ty=cy+R*0.62*Math.sin(am);
+    svg+=`<text x="${tx}" y="${ty}" font-size="20" text-anchor="middle" dominant-baseline="central">${WHEEL_ITEMS[i][0]}</text>`;
+  }
+  document.getElementById("wheel").innerHTML=svg;
+}
+function spinWheel(){
+  if(spinning)return; spinning=true;
+  document.getElementById("wheelResult").textContent="";
+  const n=WHEEL_ITEMS.length, step=360/n;
+  const win=Math.floor(Math.random()*n);
+  const target=360*5 + (360 - (win*step+step/2));
+  wheelAngle+=target;
+  const w=document.getElementById("wheel");
+  w.style.transform=`rotate(${wheelAngle}deg)`;
+  setTimeout(()=>{
+    spinning=false;
+    const type=WHEEL_ITEMS[win][1];
+    const d=DISHES.filter(x=>x.type===type).sort((a,b)=>b.rating-a.rating)[0]||DISHES[0];
+    document.getElementById("wheelResult").innerHTML=`${d.e} <b>${d.name}</b> — đi thôi!`;
+  },4100);
+}
+
+/* =========================================================
+   TINDER FOOD
+========================================================= */
+const TINDER_DECK=DISHES.slice().sort(()=>Math.random()-0.5);
+let tIdx=0; const likes={};
+function buildTinder(){
+  renderTcard();
+}
+function renderTcard(){
+  const box=document.getElementById("tinder");
+  if(tIdx>=TINDER_DECK.length){
+    const top=Object.entries(likes).sort((a,b)=>b[1]-a[1])[0];
+    const fav=top?TYPE_LABEL[top[0]]:"đa dạng";
+    const rec=top?DISHES.filter(d=>d.type===top[0]).sort((a,b)=>b.rating-a.rating)[0]:DISHES[0];
+    box.innerHTML=`<div class="tcard"><div class="e">🎉</div>
+      <div class="n" style="font-size:20px;text-align:center;padding:0 16px">
+      Gu của bạn: <b>${fav}</b><br><span style="font-size:16px;color:var(--muted)">Gợi ý: ${rec.e} ${rec.name}</span></div></div>`;
+    document.getElementById("tinderResult").innerHTML=
+      `<button class="btn btn-sm" onclick="resetTinder()">Chơi lại 🔄</button>`;
+    return;
+  }
+  const d=TINDER_DECK[tIdx];
+  box.innerHTML=`<div class="tcard" id="tcard">
+      <span class="stamp like">LIKE</span><span class="stamp nope">NOPE</span>
+      <div class="e">${d.e}</div><div class="n">${d.name}</div>
+      <div style="color:var(--muted);margin-top:4px">${TYPE_LABEL[d.type]} · ${fmt(d.price)}đ</div>
+    </div>`;
+  document.getElementById("tinderResult").textContent=`Món ${tIdx+1}/${TINDER_DECK.length}`;
+}
+function swipe(like){
+  if(tIdx>=TINDER_DECK.length)return;
+  const d=TINDER_DECK[tIdx];
+  if(like) likes[d.type]=(likes[d.type]||0)+1;
+  const card=document.getElementById("tcard");
+  if(card){
+    card.querySelector(like?".like":".nope").style.opacity=1;
+    card.style.transform=`translateX(${like?'':'-'}140%) rotate(${like?'':'-'}20deg)`;
+    card.style.opacity=0;
+  }
+  tIdx++;
+  setTimeout(renderTcard,320);
+}
+function resetTinder(){tIdx=0;for(const k in likes)delete likes[k];TINDER_DECK.sort(()=>Math.random()-0.5);renderTcard();}
+
+/* ---------- init ---------- */
+initMood(); buildWheel(); buildTinder();
+</script>
+</body>
+</html>
