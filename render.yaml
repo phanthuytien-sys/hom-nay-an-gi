@@ -1,0 +1,16 @@
+# Render Blueprint — tự động cấu hình deploy backend
+# Dùng: Render Dashboard → New + → Blueprint → chọn repo này → Apply
+services:
+  - type: web
+    name: hom-nay-an-gi-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      # Điền key Google Places trong Dashboard (không commit vào repo).
+      # Để trống thì /api/places dùng dữ liệu mẫu — API vẫn chạy bình thường.
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
