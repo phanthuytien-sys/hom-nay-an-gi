@@ -1,0 +1,20 @@
+[
+  {"id":1,"name":"Bún bò Huế","e":"🍜","type":"nuoc","price":38000,"rating":5,"dist":750,"open":true,"moods":["lanh","met","deadline"],"who":["minh","banbe","dongnghiep"],"q":"Bún bò Huế gần đây"},
+  {"id":2,"name":"Phở Thìn","e":"🍜","type":"nuoc","price":60000,"rating":5,"dist":420,"open":true,"moods":["lanh","buonngu","met"],"who":["minh","dongnghiep"],"q":"Phở Thìn"},
+  {"id":3,"name":"Bún chả Hà Nội","e":"🍛","type":"bun","price":45000,"rating":4,"dist":690,"open":true,"moods":["vui","nong"],"who":["banbe","nguoiyeu"],"q":"Bún chả gần đây"},
+  {"id":4,"name":"Cơm tấm Cali","e":"🍚","type":"com","price":42000,"rating":4,"dist":800,"open":true,"moods":["deadline","met"],"who":["minh","dongnghiep"],"q":"Cơm tấm gần đây"},
+  {"id":5,"name":"Cơm gà Hải Nam","e":"🍚","type":"com","price":55000,"rating":4,"dist":1200,"open":true,"moods":["deadline"],"who":["dongnghiep","banbe"],"q":"Cơm gà Hải Nam"},
+  {"id":6,"name":"Pizza 4P's","e":"🍕","type":"pizza","price":120000,"rating":5,"dist":1800,"open":true,"moods":["vui"],"who":["nguoiyeu","banbe"],"q":"Pizza 4Ps"},
+  {"id":7,"name":"Burger Phố","e":"🍔","type":"fastfood","price":65000,"rating":4,"dist":950,"open":true,"moods":["vui","deadline"],"who":["banbe","minh"],"q":"Burger gần đây"},
+  {"id":8,"name":"Salad Healthy Bowl","e":"🥗","type":"healthy","price":70000,"rating":4,"dist":600,"open":true,"moods":["nong"],"who":["minh","nguoiyeu"],"q":"Salad healthy gần đây"},
+  {"id":9,"name":"Sushi Tei","e":"🍣","type":"nhat","price":110000,"rating":5,"dist":1500,"open":true,"moods":["vui","nong"],"who":["nguoiyeu","banbe"],"q":"Sushi gần đây"},
+  {"id":10,"name":"Mì cay Hàn Quốc","e":"🥘","type":"han","price":75000,"rating":4,"dist":1100,"open":true,"moods":["lanh","deadline"],"who":["banbe","nguoiyeu"],"q":"Mì cay Hàn Quốc"},
+  {"id":11,"name":"Buffet nướng BBQ","e":"🥩","type":"nuong","price":199000,"rating":5,"dist":2200,"open":true,"moods":["vui"],"who":["banbe","dongnghiep"],"q":"Buffet nướng gần đây"},
+  {"id":12,"name":"Bún riêu cua","e":"🍲","type":"nuoc","price":35000,"rating":4,"dist":540,"open":true,"moods":["lanh","met"],"who":["minh"],"q":"Bún riêu gần đây"},
+  {"id":13,"name":"Dimsum quán Tàu","e":"🥟","type":"trung","price":90000,"rating":4,"dist":1700,"open":true,"moods":["vui","nong"],"who":["nguoiyeu","banbe"],"q":"Dimsum gần đây"},
+  {"id":14,"name":"Cơm gà xối mỡ","e":"🍗","type":"com","price":40000,"rating":4,"dist":880,"open":true,"moods":["deadline","met"],"who":["minh","dongnghiep"],"q":"Cơm gà xối mỡ"},
+  {"id":15,"name":"Bún chả cá","e":"🐟","type":"bun","price":38000,"rating":4,"dist":920,"open":true,"moods":["nong","met"],"who":["minh"],"q":"Bún chả cá gần đây"},
+  {"id":16,"name":"Trà chanh giải nhiệt","e":"🍹","type":"cafe","price":25000,"rating":4,"dist":300,"open":true,"moods":["nong","vui"],"who":["banbe"],"q":"Trà chanh gần đây"},
+  {"id":17,"name":"Cà phê sữa đá","e":"☕","type":"cafe","price":30000,"rating":5,"dist":250,"open":true,"moods":["buonngu","deadline"],"who":["minh","dongnghiep"],"q":"Cà phê gần đây"},
+  {"id":18,"name":"Gỏi cuốn tôm thịt","e":"🥬","type":"healthy","price":35000,"rating":4,"dist":480,"open":true,"moods":["nong"],"who":["minh","nguoiyeu"],"q":"Gỏi cuốn gần đây"}
+]
