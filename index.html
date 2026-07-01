@@ -242,6 +242,7 @@
 <footer>
   <div><b>🥢 Hôm Nay Ăn Gì?</b> — Hết đau đầu vì "ăn gì trưa nay?"</div>
   <div class="credit">Bản demo tương tác · Dữ liệu món ăn là mẫu · © 2026</div>
+  <div id="connBadge" class="credit">⏳ Đang kết nối server...</div>
 </footer>
 
 <script src="locations.js"></script>
@@ -275,6 +276,52 @@ const TYPE_LABEL = {nuoc:"Nước",com:"Cơm",fastfood:"Fast Food",pizza:"Pizza"
   nhat:"Nhật",han:"Hàn",nuong:"Nướng",bun:"Bún",trung:"Đồ Trung",cafe:"Cafe"};
 
 /* state người dùng */
+/* =========================================================
+   KẾT NỐI BACKEND (Render API)
+========================================================= */
+const API_BASE = "https://hom-nay-an-gi-api.onrender.com";
+const USER_ID = (() => {
+  let id = localStorage.getItem("hnag_uid");
+  if (!id) { id = "u" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); localStorage.setItem("hnag_uid", id); }
+  return id;
+})();
+let BACKEND_OK = false;
+
+async function apiFetch(path, opts = {}, timeout = 9000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeout);
+  try {
+    const r = await fetch(API_BASE + path, { ...opts, signal: ctrl.signal });
+    clearTimeout(t);
+    if (!r.ok) throw 0;
+    return await r.json();
+  } catch { clearTimeout(t); return null; }
+}
+function logHistory(dish, type, action) {
+  apiFetch("/api/history", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: USER_ID, dish, type, action })
+  }, 7000);
+}
+function setBadge(ok) {
+  BACKEND_OK = ok;
+  const b = document.getElementById("connBadge");
+  if (b) b.textContent = ok ? "🟢 Đã kết nối server" : "🔴 Server đang ngủ — dùng dữ liệu offline";
+}
+async function initBackend() {
+  const res = await apiFetch("/api/restaurants", {}, 12000);
+  if (res && res.data && res.data.length) {
+    DISHES.splice(0, DISHES.length, ...res.data);
+    TINDER_DECK.splice(0, TINDER_DECK.length, ...DISHES);
+    TINDER_DECK.sort(() => Math.random() - 0.5);
+    if (tIdx === 0) renderTcard();
+    setBadge(true);
+  } else {
+    setBadge(false);
+  }
+}
+
 const S = {province:null, district:null, ward:null, location:null, budget:80000, type:null, who:null, distance:2000};
 let stepIdx = 0;
 let lastResult = null;
@@ -487,6 +534,8 @@ function showResult(){
   resultPool = pickMatches();
   resultPos = 0;
   paintResult();
+  const d = resultPool[0];
+  if (d) logHistory(d.name, d.type, "eat");
 }
 function paintResult(){
   const d = resultPool[resultPos % resultPool.length];
@@ -543,6 +592,8 @@ function changeDish(){
   changeCount++;
   resultPos++;
   paintResult();
+  const d = resultPool[resultPos % resultPool.length];
+  if (d) logHistory(d.name, d.type, "change");
   // Easter egg
   const egg=document.getElementById("easter");
   if(changeCount>=3 && changeCount<6) egg.textContent="😒 Anh khó chiều ghê á nha.";
@@ -559,6 +610,7 @@ function restart(){
 ========================================================= */
 function surpriseMe(){
   const d=DISHES[Math.floor(Math.random()*DISHES.length)];
+  logHistory(d.name, d.type, "eat");
   document.getElementById("surpriseOut").innerHTML=
     `<div class="pill" style="font-size:20px">${d.e} <b>${d.name}</b> · ${fmt(d.price)}đ</div>
      <div style="margin-top:10px"><a class="btn btn-sm" target="_blank"
@@ -644,6 +696,7 @@ function renderTcard(){
       Gu của bạn: <b>${fav}</b><br><span style="font-size:16px;color:var(--muted)">Gợi ý: ${rec.e} ${rec.name}</span></div></div>`;
     document.getElementById("tinderResult").innerHTML=
       `<button class="btn btn-sm" onclick="resetTinder()">Chơi lại 🔄</button>`;
+    if (BACKEND_OK) enhanceTinderResult();
     return;
   }
   const d=TINDER_DECK[tIdx];
@@ -654,10 +707,25 @@ function renderTcard(){
     </div>`;
   document.getElementById("tinderResult").textContent=`Món ${tIdx+1}/${TINDER_DECK.length}`;
 }
+async function enhanceTinderResult(){
+  const p = await apiFetch("/api/preferences/" + USER_ID, {}, 9000);
+  if (!p || !p.favoriteTypes || !p.favoriteTypes.length) return;
+  const favType = p.favoriteTypes[0].type;
+  const sugg = p.suggestion;
+  const box = document.getElementById("tinder");
+  if (!box) return;
+  box.innerHTML = `<div class="tcard"><div class="e">🧠</div>
+    <div class="n" style="font-size:19px;text-align:center;padding:0 16px">
+      Vợ học được gu của bạn: <b>${TYPE_LABEL[favType]||favType}</b>
+      ${sugg?`<br><span style="font-size:15px;color:var(--muted)">Thử món mới: ${sugg.e} ${sugg.name}</span>`:""}
+      <br><span style="font-size:12px;color:var(--muted)">☁️ đã lưu trên server</span>
+    </div></div>`;
+}
 function swipe(like){
   if(tIdx>=TINDER_DECK.length)return;
   const d=TINDER_DECK[tIdx];
   if(like) likes[d.type]=(likes[d.type]||0)+1;
+  logHistory(d.name, d.type, like ? "like" : "nope");
   const card=document.getElementById("tcard");
   if(card){
     card.querySelector(like?".like":".nope").style.opacity=1;
@@ -670,7 +738,7 @@ function swipe(like){
 function resetTinder(){tIdx=0;for(const k in likes)delete likes[k];TINDER_DECK.sort(()=>Math.random()-0.5);renderTcard();}
 
 /* ---------- init ---------- */
-initMood(); buildWheel(); buildTinder();
+initMood(); buildWheel(); buildTinder(); initBackend();
 </script>
 </body>
 </html>
