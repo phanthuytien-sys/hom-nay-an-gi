@@ -1,7 +1,7 @@
 {
   "name": "hom-nay-an-gi-backend",
-  "version": "1.0.0",
-  "description": "Backend API cho app Hôm Nay Ăn Gì? — danh sách quán ăn, lịch sử/sở thích, Google Places",
+  "version": "1.0.1",
+  "description": "Backend API cho app Hôm Nay Ăn Gì? — danh sách quán ăn, lịch sử/sở thích, Google Places. Phục vụ luôn frontend (index.html, og-cover.png) từ gốc repo.",
   "type": "module",
   "main": "server.js",
   "scripts": {
