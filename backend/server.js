@@ -24,6 +24,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ---------- phục vụ luôn FRONTEND (full-stack trên 1 URL) ----------
+// Render checkout cả repo; __dirname = backend/, ".." = gốc repo (chứa index.html, locations.js).
+// Nhờ vậy mở https://hom-nay-an-gi-api.onrender.com là chạy luôn cả app —
+// lúc trang tải xong thì server đã "ấm", nên mọi API trả data THẬT ngay lập tức.
+const FRONTEND_DIR = join(__dirname, "..");
+app.use(express.static(FRONTEND_DIR));
+
 // ---------- helpers lưu trữ (JSON file) ----------
 async function readJSON(file, fallback) {
   try {

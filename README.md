@@ -2,7 +2,14 @@
 
 App tương tác giúp "Vợ Ô Xêhun" quyết định bữa trưa thay bạn — hết đau đầu vì *"ăn gì trưa nay?"*.
 
-🔗 **Bản chạy thật (frontend):** https://phanthuytien-sys.github.io/hom-nay-an-gi/
+## 🔗 Bản chạy thật
+
+| | URL | Kiến trúc |
+|---|---|---|
+| **App đầy đủ (khuyên dùng)** | https://hom-nay-an-gi-api.onrender.com | Full-stack trên Render — **frontend + backend cùng 1 server**, data lấy trực tiếp từ API. |
+| Bản marketing tĩnh | https://phanthuytien-sys.github.io/hom-nay-an-gi/ | GitHub Pages (chỉ host được file tĩnh) — vẫn gọi ngược về backend Render. |
+
+> ⚠️ **Vì sao có 2 bản?** GitHub Pages **chỉ host được trang tĩnh, không chạy được backend riêng**. Vì vậy backend Node/Express được deploy lên **Render** (nền tảng chạy được web app có server). Render free tier ngủ sau ~15 phút và mất ~30s để thức dậy ở lần truy cập đầu — app đã có retry + trạng thái "đang đánh thức server" để chờ và kết nối, thay vì rơi ngay về data tĩnh.
 
 ## Cấu trúc
 ```

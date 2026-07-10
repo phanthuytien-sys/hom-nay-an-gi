@@ -279,7 +279,16 @@ const TYPE_LABEL = {nuoc:"Nước",com:"Cơm",fastfood:"Fast Food",pizza:"Pizza"
 /* =========================================================
    KẾT NỐI BACKEND (Render API)
 ========================================================= */
-const API_BASE = "https://hom-nay-an-gi-api.onrender.com";
+// API_BASE tự chọn:
+//  • Trên GitHub Pages (*.github.io) → gọi sang backend Render (cross-origin).
+//  • Trên chính Render / localhost (http) → dùng same-origin: khi trang đã tải xong,
+//    server chắc chắn đã "ấm" nên data thật về ngay, không còn cảnh timeout.
+//  • Mở file:// trực tiếp → trỏ về Render.
+const RENDER_URL = "https://hom-nay-an-gi-api.onrender.com";
+const API_BASE =
+  location.protocol.startsWith("http") && !/github\.io$/i.test(location.hostname)
+    ? location.origin
+    : RENDER_URL;
 const USER_ID = (() => {
   let id = localStorage.getItem("hnag_uid");
   if (!id) { id = "u" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); localStorage.setItem("hnag_uid", id); }
@@ -304,22 +313,29 @@ function logHistory(dish, type, action) {
     body: JSON.stringify({ userId: USER_ID, dish, type, action })
   }, 7000);
 }
-function setBadge(ok) {
-  BACKEND_OK = ok;
+function setBadge(state) {
+  BACKEND_OK = state === true;
   const b = document.getElementById("connBadge");
-  if (b) b.textContent = ok ? "🟢 Đã kết nối server" : "🔴 Server đang ngủ — dùng dữ liệu offline";
+  if (!b) return;
+  if (state === "connecting") b.textContent = "⏳ Đang đánh thức server (Render free ngủ khi rảnh, chờ ~30s)...";
+  else if (state === true)    b.textContent = "🟢 Đã kết nối backend — dữ liệu lấy trực tiếp từ server";
+  else                        b.textContent = "🔴 Không gọi được server — tạm dùng dữ liệu offline";
 }
 async function initBackend() {
-  const res = await apiFetch("/api/restaurants", {}, 12000);
-  if (res && res.data && res.data.length) {
-    DISHES.splice(0, DISHES.length, ...res.data);
-    TINDER_DECK.splice(0, TINDER_DECK.length, ...DISHES);
-    TINDER_DECK.sort(() => Math.random() - 0.5);
-    if (tIdx === 0) renderTcard();
-    setBadge(true);
-  } else {
-    setBadge(false);
+  setBadge("connecting");
+  // Thử lại nhiều lần để "sống sót" qua cold start của Render free (có thể mất 30–50s).
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const res = await apiFetch("/api/restaurants", {}, 30000);
+    if (res && res.data && res.data.length) {
+      DISHES.splice(0, DISHES.length, ...res.data);
+      TINDER_DECK.splice(0, TINDER_DECK.length, ...DISHES);
+      TINDER_DECK.sort(() => Math.random() - 0.5);
+      if (tIdx === 0) renderTcard();
+      setBadge(true);
+      return;
+    }
   }
+  setBadge(false);
 }
 
 const S = {province:null, district:null, ward:null, location:null, budget:80000, type:null, who:null, distance:2000};
